@@ -7,6 +7,9 @@ const fs = require('fs');
 const app = express();
 const port = 3000;
 
+// Store current timer state
+let currentTimerState = '2:00';
+
 app.use(cors({
     origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
     methods: ['GET', 'POST'],
@@ -14,7 +17,21 @@ app.use(cors({
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
+// Endpoint to update timer
+app.post('/api/timer', (req, res) => {
+    const { timer } = req.body;
+    currentTimerState = timer;
+    res.json({ success: true });
+});
+
+// Endpoint to get current timer
+app.get('/api/timer', (req, res) => {
+    res.json({ timer: currentTimerState });
+});
+
+// Previous existing routes...
 app.get('/api/words', (req, res) => {
     const excelPath = path.join(__dirname, 'List.xlsx');
     

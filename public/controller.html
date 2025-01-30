@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charades Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="game-card">
+            <h1>من غير كلام</h1>
+            <!-- Category Selection -->
+            <div class="category-section">
+                <label for="category-select">Select Category:</label>
+                <select id="category-select" disabled>
+                    <option value="">Choose a category</option>
+                    <option value="أفلام">أفلام</option>
+                    <option value="مسرحيات">مسرحيات</option>
+                    <option value="أغاني">أغاني</option>
+                    <option value="مسلسلات">مسلسلات</option>
+                </select>
+            </div>
+            <button id="shuffle-btn" disabled>Shuffle</button>
+            <!-- Word Display -->
+            <div class="word-display">
+                <h2 id="current-word">Loading words...</h2>
+            </div>
+
+            <!-- Timer Display -->
+            <div class="timer-display">
+                <span id="timer">2:00</span>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="controls">
+                <button id="timer-btn" disabled>Start</button>
+            </div>
+
+            <!-- Timer Settings -->
+            <div class="timer-section">
+                <label for="timer-slider">Timer (seconds): <span id="timer-value">120</span></label>
+                <input type="range" id="timer-slider" min="30" max="300" step="30" value="120">
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

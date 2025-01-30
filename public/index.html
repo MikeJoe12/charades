@@ -3,50 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charades Game</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>من غير كلام - Timer</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            background-color: #f5f3ff;
+        }
+
+        #qr-code {
+            max-width: 150px;
+            max-height: 150px;
+            margin-bottom: 30px;
+        }
+
+        #timer {
+            font-size: 10rem;
+            font-weight: bold;
+            color: #6d28d9;
+        }
+
+        h1 {
+            font-size: 10.5rem;
+            color: #6d28d9;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="game-card">
-            <h1>من غير كلام</h1>
-            <!-- Category Selection -->
-            <div class="category-section">
-                <label for="category-select">Select Category:</label>
-                <select id="category-select" disabled>
-                    <option value="">Choose a category</option>
-                    <option value="أفلام">أفلام</option>
-                    <option value="مسرحيات">مسرحيات</option>
-                    <option value="أغاني">أغاني</option>
-                    <option value="مسلسلات">مسلسلات</option>
-                </select>
-            </div>
-<button id="shuffle-btn" disabled>Shuffle</button>
-            <!-- Word Display -->
-            <div class="word-display">
-                <h2 id="current-word">Loading words...</h2>
-            </div>
+    <h1>من غير كلام</h1>	
+    <img id="qr-code" src="QRcode.png" alt="Game QR Code">
+    <div id="timer">2:00</div>
 
-            <!-- Timer Display -->
-            <div class="timer-display">
-                <span id="timer">2:00</span>
-            </div>
+    <audio id="gameOverSound">
+        <source src="GameOver.wav" type="audio/wav">
+    </audio>
 
-            <!-- Control Buttons -->
-            <div class="controls">
-                
-                <button id="timer-btn" disabled>Start</button>
-            </div>
+    <script>
+        const timerDisplay = document.getElementById('timer');
+        const gameOverSound = document.getElementById('gameOverSound');
+        let lastTimer = '2:00';
 
-            <!-- Timer Settings -->
-            <div class="timer-section">
-                <label for="timer-slider">Timer (seconds): <span id="timer-value">120</span></label>
-                <input type="range" id="timer-slider" min="30" max="300" step="30" value="120">
-            </div>
-        </div>
-    </div>
+        // Fetch timer updates periodically
+        function fetchTimerUpdate() {
+            fetch('/api/timer')
+                .then(response => response.json())
+                .then(data => {
+                    timerDisplay.textContent = data.timer;
+                    
+                    // Play game over sound when timer reaches 0
+                    if (data.timer === '0:00' && lastTimer !== '0:00') {
+                        gameOverSound.play();
+                    }
+                    
+                    lastTimer = data.timer;
+                })
+                .catch(error => console.error('Error fetching timer:', error));
+        }
 
-    <script src="script.js"></script>
+        // Initial fetch
+        fetchTimerUpdate();
+
+        // Periodic updates every second
+        setInterval(fetchTimerUpdate, 1000);
+    </script>
 </body>
 </html>

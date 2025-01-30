@@ -4,9 +4,6 @@ let currentWord = '';
 let timerInterval;
 let isPlaying = false;
 
-// Create audio element for game over sound
-const gameOverSound = new Audio('GameOver.wav');
-
 // DOM elements
 const categorySelect = document.getElementById('category-select');
 const timerSlider = document.getElementById('timer-slider');
@@ -15,6 +12,17 @@ const currentWordDisplay = document.getElementById('current-word');
 const timerDisplay = document.getElementById('timer');
 const shuffleBtn = document.getElementById('shuffle-btn');
 const timerBtn = document.getElementById('timer-btn');
+
+// Function to send timer update to server
+function sendTimerUpdate(timeString) {
+    fetch('/api/timer', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ timer: timeString })
+    });
+}
 
 // Detailed fetch with error handling
 async function fetchWords() {
@@ -55,6 +63,9 @@ timerSlider.addEventListener('input', (e) => {
     const seconds = e.target.value;
     timerValue.textContent = seconds;
     timerDisplay.textContent = formatTime(seconds);
+    
+    // Send timer update to server
+    sendTimerUpdate(formatTime(seconds));
 });
 
 // Shuffle button handling
@@ -69,6 +80,9 @@ shuffleBtn.addEventListener('click', () => {
         stopTimer();
         timerDisplay.textContent = formatTime(timerSlider.value);
         timerBtn.disabled = false;
+        
+        // Send timer update to server
+        sendTimerUpdate(formatTime(timerSlider.value));
     } else {
         currentWordDisplay.textContent = 'Please select a category first';
     }
@@ -91,21 +105,24 @@ function startTimer() {
     let timeLeft = parseInt(timerSlider.value);
     timerDisplay.textContent = formatTime(timeLeft);
     
+    // Send initial timer update to server
+    sendTimerUpdate(formatTime(timeLeft));
+    
     timerInterval = setInterval(() => {
         timeLeft--;
         timerDisplay.textContent = formatTime(timeLeft);
+        
+        // Send timer update to server
+        sendTimerUpdate(formatTime(timeLeft));
         
         if (timeLeft <= 0) {
             stopTimer();
             timerBtn.textContent = 'Start';
             isPlaying = false;
             
-            // Play game over sound
-            try {
-                gameOverSound.play();
-            } catch (error) {
-                console.error('Error playing game over sound:', error);
-            }
+            // Send final timer update to server
+            sendTimerUpdate(formatTime(0));
+            
         }
     }, 1000);
 }
