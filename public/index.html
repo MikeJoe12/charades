@@ -39,17 +39,14 @@
     </style>
 </head>
 <body>
+<audio id="gameOverSound" src="GameOver.mp3"></audio>
     <h1>من غير كلام</h1>	
     <img src="QRCode.png" alt="Scan Me" id="qr-code">
     <div id="timer">2:00</div>
 
-    <audio id="gameOverSound">
-        <source src="GameOver.wav" type="audio/wav">
-    </audio>
-
     <script>
         const timerDisplay = document.getElementById('timer');
-        const gameOverSound = document.getElementById('gameOverSound');
+		const gameOverSound = document.getElementById('gameOverSound');
         let lastTimer = '2:00';
 
         // Fetch timer updates periodically
@@ -61,7 +58,9 @@
                     
                     // Play game over sound when timer reaches 0
                     if (data.timer === '0:00' && lastTimer !== '0:00') {
-                        gameOverSound.play();
+                      
+						            
+                       gameOverSound.play();
                     }
                     
                     lastTimer = data.timer;
