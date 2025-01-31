@@ -75,7 +75,9 @@ app.get('/api/words', (req, res) => {
         });
     }
 });
-
+app.get('/GameOver.mp3', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'GameOver.mp3'));
+});
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
